@@ -34,7 +34,22 @@
 /* *** */
 
 html {
+  margin: 0;
 }
 
 body {
+  height: 100%;
+  margin: 0;
+}
+
+canvas {
+  margin: 0;
+  vertical-align: top; /* HACK: hide crollbars (?!) */
+}
+
+.app {
+  position: relative;
+  display: block;
+  height: 100%;
+  width: 100%;
 }

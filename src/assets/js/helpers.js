@@ -1,0 +1,1 @@
+export const getStyle = el => window.getComputedStyle ? getComputedStyle(el, null) : el.currentStyle;
