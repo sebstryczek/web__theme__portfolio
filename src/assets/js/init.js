@@ -10,7 +10,7 @@ const init = ( container, clearColor ) => {
   renderer.setClearColor(clearColor);
   renderer.setSize( width, height );
   renderer.autoClear = false;
-  
+  renderer.setPixelRatio(window.devicePixelRatio);
   let currentSceneWrapper = null;
   
   const loops = [];
@@ -18,12 +18,12 @@ const init = ( container, clearColor ) => {
   const clock = new THREE.Clock();
 
   /* Stats */
-  const stats = new Stats();
-  stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-  container.appendChild( stats.dom );
+  //const stats = new Stats();
+  //stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+  //container.appendChild( stats.dom );
   /* *** */
   const render = () => {
-    stats.begin();
+    //stats.begin();
     loops.forEach( f => f() );
     if (currentSceneWrapper) {
       const delta = clock.getDelta();
@@ -31,7 +31,7 @@ const init = ( container, clearColor ) => {
       currentSceneWrapper.animEffectsLoop( delta );
       currentSceneWrapper.render( delta );
     }
-    stats.end();
+    //stats.end();
     requestAnimationFrame(render);
   };
   render();
