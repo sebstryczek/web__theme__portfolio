@@ -53,3 +53,10 @@ canvas {
   height: 100%;
   width: 100%;
 }
+
+.cursor-pointer {
+  cursor: url(../img/cursor-pointer.png), pointer;
+}
+.cursor-grab {
+  cursor: url(../img/cursor-grab.png), pointer;
+}
