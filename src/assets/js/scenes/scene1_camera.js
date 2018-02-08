@@ -9,7 +9,8 @@
 */
 
 export default () => {
-  const camera = new THREE.PerspectiveCamera( 75, window.app.width / window.app.height, 0.1, 1000 );
+  const { width, height } = window.appGlobals;
+  const camera = new THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 );
   camera.position.z = 4;
   return camera;
 }

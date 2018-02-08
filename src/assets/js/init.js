@@ -1,46 +1,53 @@
 import { getStyle } from './UtilsCss';
+import { addStats, statsBegin, statsEnd } from './UtilsStats';
+import { onResize } from './UtilsWindow';
 
-const init = ( container, clearColor ) => {
-  
+const setSize = (container, renderer) => {
   const style = getStyle(container);
   const height = parseInt( style.height, 10 );
   const width = parseInt( style.width, 10 );
-  
-  const renderer = new THREE.WebGLRenderer({ /*antialias: true,*/ alpha: true });
-  renderer.setClearColor(clearColor);
+  window.appGlobals = Object.assign({}, window.appGlobals, { height, width });
   renderer.setSize( width, height );
-  renderer.autoClear = false;
+}
+
+let currentSceneWrapper = null;
+
+const clock = new THREE.Clock();
+const loops = [];
+const addLoop = loop => loops.push(loop);
+const render = () => {
+  statsBegin();
+  loops.forEach( f => f() );
+  if (currentSceneWrapper) {
+    const delta = clock.getDelta();
+    currentSceneWrapper.animLoop( delta );
+    currentSceneWrapper.animEffectsLoop( delta );
+    currentSceneWrapper.render( delta );
+  }
+  statsEnd();
+  requestAnimationFrame(render);
+};
+
+
+const init = ( container, clearColor ) => {
+  addStats(container);
+
+  const renderer = new THREE.WebGLRenderer({ /*antialias: true,*/ alpha: true });
+  setSize(container, renderer);
+  onResize( async e => setSize(container, renderer));
+  renderer.setClearColor(clearColor);
   renderer.setPixelRatio(window.devicePixelRatio);
-  let currentSceneWrapper = null;
-  
-  const loops = [];
-  const addLoop = loop => loops.push(loop);
-  const clock = new THREE.Clock();
-
-  /* Stats */
-  //const stats = new Stats();
-  //stats.showPanel( 1 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-  //container.appendChild( stats.dom );
-  /* *** */
-  const render = () => {
-    //stats.begin();
-    loops.forEach( f => f() );
-    if (currentSceneWrapper) {
-      const delta = clock.getDelta();
-      currentSceneWrapper.animLoop( delta );
-      currentSceneWrapper.animEffectsLoop( delta );
-      currentSceneWrapper.render( delta );
-    }
-    //stats.end();
-    requestAnimationFrame(render);
-  };
-  render();
-
+  renderer.autoClear = false;
   container.appendChild( renderer.domElement );
 
-  const openScene = async (sceneCreator) => currentSceneWrapper = await sceneCreator(renderer);
+  render();
+  
+  const openScene = async (sceneCreator) => {
+    currentSceneWrapper =  await sceneCreator(renderer);
+    onResize( async e => currentSceneWrapper = await sceneCreator(renderer) );
+  }
 
-  return { addLoop, width, height, openScene };
+  return { addLoop, openScene };
 
 }
 

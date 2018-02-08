@@ -33,14 +33,6 @@ export default (camera, polygon1, polygon2) => {
   onMouseUp( e => isDragging = false );
   
   return () => {
-    if (firstLoop) {
-      rotateObject(20, 10);
-      const worldPoint = screenToWorldPoint(camera, new THREE.Vector2(-1, 0), 0);
-      //header.position.x = worldPoint.x;
-      //header.position.y = worldPoint.y;
-      firstLoop = false;
-    }
-
     const mousePosNorm = getMousePosNorm();
     const mousePosNormDelta = getMousePosNormDelta();
     const selectedFace = getFaceOnMouse();
