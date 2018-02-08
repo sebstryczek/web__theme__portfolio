@@ -18,7 +18,7 @@ export const createReusableEffects = () => {
   const copyPass = new THREE.ShaderPass( THREE.CopyShader );
   
   const copyAndRenderPass = new THREE.ShaderPass( THREE.CopyShader );
-  copyPass.renderToScreen = true;
+  copyAndRenderPass.renderToScreen = true;
 
   const distortionPass = new THREE.ShaderPass( THREE.DistortionShader );
   

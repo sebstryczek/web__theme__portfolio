@@ -28,16 +28,18 @@ export default (renderer, camera, sceneBackground, sceneMirror, sceneHeader) => 
   composerBackground.addPass(clearPass);
   /* *** */
   /* Render background scene with SSAA */
-  const sceneBackgroundSsaaRenderPass = new THREE.SSAARenderPass(sceneBackground, camera);
-  sceneBackgroundSsaaRenderPass.unbiased = false;
-  composerBackground.addPass(sceneBackgroundSsaaRenderPass);
+  //const sceneBackgroundSsaaRenderPass = new THREE.SSAARenderPass(sceneBackground, camera);
+  //composerBackground.addPass(sceneBackgroundSsaaRenderPass);
+  //sceneBackgroundSsaaRenderPass.unbiased = false;
+  /* *** */
+  const sceneBackgroundRenderPass = new THREE.RenderPass(sceneBackground, camera);
+  composerBackground.addPass(sceneBackgroundRenderPass);
   /* *** */
   /* Background effects */
   const sceneBackgroundVignettePass = new THREE.ShaderPass( THREE.VignetteShader );
   sceneBackgroundVignettePass.uniforms[ "offset" ].value = 1;
   sceneBackgroundVignettePass.uniforms[ "darkness" ].value = 1;
   composerBackground.addPass(sceneBackgroundVignettePass);
-  //composerBackground.addPass(rgbPass);
   composerBackground.addPass(staticPass);
   composerBackground.addPass(filmPass);
   composerBackground.addPass(badTVPass);
@@ -52,38 +54,26 @@ export default (renderer, camera, sceneBackground, sceneMirror, sceneHeader) => 
   sceneMirrorVignettePass.uniforms[ "offset" ].value = 1;
   sceneMirrorVignettePass.uniforms[ "darkness" ].value = 3;
   composerBackground.addPass(sceneMirrorVignettePass);
-  composerBackground.addPass(badTVPass);
   composerBackground.addPass(clearMaskPass);
   /* *** */
   /* Final pass */
   composerBackground.addPass(copyPass);
   /* *** */
   
-  const finalComposer = new THREE.EffectComposer(renderer);
-
   sceneHeader.background = renderTarget.texture;
-  const headerSsaaRenderPass = new THREE.SSAARenderPass(sceneHeader, camera, 0x000000, 0);
-  
-  finalComposer.addPass(headerSsaaRenderPass);
+  const finalComposer = new THREE.EffectComposer(renderer);
+  //const headerSsaaRenderPass = new THREE.SSAARenderPass(sceneHeader, camera);
+  //finalComposer.addPass(headerSsaaRenderPass);
+  const headerRenderPass = new THREE.RenderPass( sceneHeader, camera);
+  finalComposer.addPass(headerRenderPass);
+  const fxaaPass = new THREE.ShaderPass( THREE.FXAAShader );
+  finalComposer.addPass(fxaaPass);
+
   finalComposer.addPass(rgbPass);
   finalComposer.addPass(distortionPass);
   finalComposer.addPass(glitchPass);
-  finalComposer.addPass(copyPass);
-  //finalComposerTexturePass.renderToScreen = true;
-  //finalComposer.addPass(finalComposerTexturePass);
+  finalComposer.addPass(copyAndRenderPass);
 
-  
-  //renderer.render( sceneHeader, camera, rtTexture, true );
-
-
-
-  
-
-
-  //const renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBuffer: true };
-  //const renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, renderTargetParameters );
-
-  
   const effects = [ badTVPass, distortionPass, filmPass, staticPass ];
   const effectGlitch = glitchPass;
   const animEffectsLoop = createAnimEffectsLoop(effects, effectGlitch);
