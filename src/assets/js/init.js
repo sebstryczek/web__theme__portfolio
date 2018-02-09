@@ -18,7 +18,7 @@ const clock = new THREE.Clock();
 const loops = [];
 const addLoop = loop => loops.push(loop);
 const render = () => {
-  //statsBegin();
+  statsBegin();
   loops.forEach( f => f() );
   if (currentSceneWrapper) {
     const delta = clock.getDelta();
@@ -27,13 +27,13 @@ const render = () => {
     currentSceneWrapper.render( delta );
   }
   doOnceAfterRenderInvoke();
-  //statsEnd();
+  statsEnd();
   requestAnimationFrame(render);
 };
 
 
 const init = ( container, clearColor ) => {
-  addStats(container);
+  //addStats(container);
 
   const renderer = new THREE.WebGLRenderer({ /*antialias: true,*/ alpha: true });
   setSize(container, renderer);

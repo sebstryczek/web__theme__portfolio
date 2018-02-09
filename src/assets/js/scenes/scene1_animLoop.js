@@ -13,7 +13,7 @@ const rotation = { x: maxAutoSpin, y: maxAutoSpin };
 const rotationSlowingFactor = 0.99;
 const isRotationComplete = ({x, y}) => Math.abs(x.toFixed(2)) < 0.01 & Math.abs(y.toFixed(2)) < 0.01
 
-export default (camera, sceneBackground, sceneHeader) => {
+export default (camera, sceneBackground, sceneText) => {
   const polygon1 = sceneBackground.children.find( x => x.name == "polygon1");
   const polygon2 = sceneBackground.children.find( x => x.name == "polygon2");
   const obj = polygon2.children.find( x => x.name == "Mesh");
@@ -27,9 +27,9 @@ export default (camera, sceneBackground, sceneHeader) => {
     rotateAroundWorldAxis(polygon2, new THREE.Vector3(1, 0, 0), angleY * deg2rad);
   }
   
-  const buttonGitHub = sceneHeader.children.find( x => x.name == "buttonGitHub");
-  const buttonLinkedIn = sceneHeader.children.find( x => x.name == "buttonLinkedIn");
-  const buttonEmail = sceneHeader.children.find( x => x.name == "buttonEmail");
+  const buttonGitHub = sceneText.children.find( x => x.name == "buttonGitHub");
+  const buttonLinkedIn = sceneText.children.find( x => x.name == "buttonLinkedIn");
+  const buttonEmail = sceneText.children.find( x => x.name == "buttonEmail");
   const buttonEmailCollider = buttonEmail.children.find( x => x.name == "buttonEmailCollider");
 
   onMouseDown( e => {
