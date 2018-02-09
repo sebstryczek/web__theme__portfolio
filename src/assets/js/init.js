@@ -1,6 +1,6 @@
 import { getStyle } from './UtilsCss';
-import { doOnceAfterRenderInvoke } from './UtilsRender';
-import { addStats, statsBegin, statsEnd } from './UtilsStats';
+import { addLoop, clearLoops } from './UtilsLoop';
+import { addStats } from './UtilsStats';
 import { onResize } from './UtilsWindow';
 
 const setSize = (container, renderer) => {
@@ -11,26 +11,6 @@ const setSize = (container, renderer) => {
   window.appGlobals = Object.assign({}, window.appGlobals, { height, width, ratio });
   renderer.setSize( width, height );
 }
-
-let currentSceneWrapper = null;
-
-const clock = new THREE.Clock();
-const loops = [];
-const addLoop = loop => loops.push(loop);
-const render = () => {
-  statsBegin();
-  loops.forEach( f => f() );
-  if (currentSceneWrapper) {
-    const delta = clock.getDelta();
-    currentSceneWrapper.animLoop( delta );
-    currentSceneWrapper.animEffectsLoop( delta );
-    currentSceneWrapper.render( delta );
-  }
-  doOnceAfterRenderInvoke();
-  statsEnd();
-  requestAnimationFrame(render);
-};
-
 
 const init = ( container, clearColor ) => {
   //addStats(container);
@@ -43,14 +23,22 @@ const init = ( container, clearColor ) => {
   renderer.autoClear = false;
   container.appendChild( renderer.domElement );
 
-  render();
-  
-  const openScene = async (sceneCreator) => {
-    currentSceneWrapper =  await sceneCreator(renderer);
-    onResize( async e => currentSceneWrapper = await sceneCreator(renderer) );
+  const initSceneLoop = async sceneCreator => {
+    clearLoops();
+    const sceneWrapper =  await sceneCreator(renderer);
+    addLoop( delta => {
+      sceneWrapper.animLoop( delta );
+      sceneWrapper.animEffectsLoop( delta );
+      sceneWrapper.render( delta );
+    });
   }
 
-  return { addLoop, openScene };
+  const openScene = async (sceneCreator) => {
+    await initSceneLoop(sceneCreator);
+    onResize( async e => await initSceneLoop(sceneCreator) );
+  }
+
+  return { openScene };
 
 }
 

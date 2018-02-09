@@ -4,6 +4,7 @@ let posNorm = { x: -1, y: -1 };
 let prevPosNorm = { x: -1, y: -1 };
 const onMouseDownCallbacks = [];
 const onMouseUpCallbacks = [];
+const onMouseClickCallbacks = [];
 
 document.addEventListener('mousemove', event => {
   event.preventDefault();
@@ -23,6 +24,11 @@ document.addEventListener('mousedown', event => {
 document.addEventListener('mouseup', event => {
   event.preventDefault();
   onMouseUpCallbacks.forEach( f => f(event) );
+}, true);
+
+document.addEventListener('click', event => {
+  //event.preventDefault();
+  onMouseClickCallbacks.forEach( f => f(event) );
 }, true);
 
 export const getMousePos = () => pos;
@@ -45,3 +51,4 @@ export const getMousePosNormDelta = () => {
 
 export const onMouseDown = f => onMouseDownCallbacks.push(f);
 export const onMouseUp = f => onMouseUpCallbacks.push(f);
+export const onMouseClick = f => onMouseClickCallbacks.push(f);

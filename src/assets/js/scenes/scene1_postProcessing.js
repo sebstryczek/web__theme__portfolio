@@ -1,7 +1,7 @@
 import { createReusableEffects, createAnimEffectsLoop } from './scene1_postProcessingEffects';
 
 
-export default (renderer, camera, sceneBackground, sceneMirror, sceneText) => {
+export default (renderer, camera, sceneBackground, sceneMirror, sceneUI) => {
   const renderTarget = new THREE.WebGLRenderTarget(
     window.innerWidth, window.innerHeight,
     {
@@ -62,14 +62,14 @@ export default (renderer, camera, sceneBackground, sceneMirror, sceneText) => {
   composerBackground.addPass(copyPass);
   /* *** */
   
-  sceneText.background = renderTarget.texture;
+  sceneUI.background = renderTarget.texture;
   
   const finalComposer = new THREE.EffectComposer(renderer);
   finalComposer.addPass(clearPass);
-  //const textSsaaRenderPass = new THREE.SSAARenderPass(sceneText, camera);
-  //finalComposer.addPass(textSsaaRenderPass);
-  const textRenderPass = new THREE.RenderPass( sceneText, camera);
-  finalComposer.addPass(textRenderPass);
+  //const uiSsaaRenderPass = new THREE.SSAARenderPass(sceneUI, camera);
+  //finalComposer.addPass(uiSsaaRenderPass);
+  const uiRenderPass = new THREE.RenderPass(sceneUI, camera);
+  finalComposer.addPass(uiRenderPass);
   //const fxaaPass = new THREE.ShaderPass( THREE.FXAAShader );
   //finalComposer.addPass(fxaaPass);
   finalComposer.addPass(rgbPass);
