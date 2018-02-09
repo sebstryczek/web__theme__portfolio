@@ -9,7 +9,7 @@ export default async (renderer) => {
   const camera = createCamera();
   const sceneBackground = createSceneBackground();
   const sceneMirror = createSceneMirrorMask();
-  const sceneHeader = await createSceneHeader();
+  const sceneHeader = await createSceneHeader(camera);
   const { render, animEffectsLoop } = createPostProcessingRenderer(
     renderer,
     camera,
@@ -18,9 +18,7 @@ export default async (renderer) => {
     sceneHeader
   );
   
-  const polygon1 = sceneBackground.children.find( x => x.name == "polygon1");
-  const polygon2 = sceneBackground.children.find( x => x.name == "polygon2");
-  const animLoop = createAnimLoop(camera, polygon1, polygon2);
+  const animLoop = createAnimLoop(camera, sceneBackground, sceneHeader);
   
   return {
     render, animLoop, animEffectsLoop

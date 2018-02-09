@@ -35,7 +35,7 @@ export const createReusableEffects = () => {
 
   const rgbPass = new THREE.ShaderPass( THREE.RGBShiftShader );
   rgbPass.uniforms['angle'].value = 0.2 * Math.PI;
-  rgbPass.uniforms['amount'].value = 0.003;
+  rgbPass.uniforms['amount'].value = 0.002;
   
   const staticPass = new THREE.ShaderPass( THREE.StaticShader );
   staticPass.uniforms[ 'amount' ].value = 0.1;

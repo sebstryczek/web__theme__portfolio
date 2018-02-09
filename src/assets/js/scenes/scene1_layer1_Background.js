@@ -8,6 +8,7 @@ const createBackgrondPlane = () => {
   const plane = new THREE.Mesh( geometry, material );
   return plane;
 }
+
 const generateParticleTexture = () => {
   const size = 256;
   const radius = size / 2;
@@ -47,7 +48,7 @@ export const createPolygon = (size, position) => {
   const edgesMaterial = new THREE.MeshBasicMaterial({
     color: "#000000",
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.2,
     fog: true,
     depthTest: false
   });
@@ -55,6 +56,7 @@ export const createPolygon = (size, position) => {
   meshShape.name = "Mesh";
 
   const meshEdges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
+  meshEdges.name = "Edges";
 
   const particleGeometry = new THREE.Geometry();
   particleGeometry.vertices = shapeGeometry.vertices.map(v => {

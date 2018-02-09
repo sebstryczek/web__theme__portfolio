@@ -1,16 +1,24 @@
-export const screenToWorldPoint = (camera, screenPoint, z) => {
-  const plane = new THREE.Mesh(
-    new THREE.PlaneGeometry(100, 100),
-    new THREE.MeshBasicMaterial()
-  );
-  plane.position.z = z;
-  const v3 = new THREE.Vector3(screenPoint.x, screenPoint.y, 0);
+const findScene = obj => obj.parent == null || obj.parent.type == "Scene" ? obj.parent : findScene(obj.parent);
+
+export const screenToWorldPoint = (camera, point, obj) => {
+  const v2 = new THREE.Vector2(point.x, point.y);
   const raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera(screenPoint, camera);
-  const intersect = raycaster.intersectObject(plane, false);
-  const pos = intersect[0].point.clone();
+
+  const objScene = findScene(obj);
+  const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(100, 100, 0),
+    new THREE.MeshBasicMaterial({visible: true})
+  );
+  objScene.add(plane);
+
+  raycaster.setFromCamera(v2, camera);
+  const intersects = raycaster.intersectObject(plane, true);
+  const intersect = intersects[0] || {};
+  const pos = intersect.point ? intersect.point.clone() : null;
+  
+  objScene.remove(plane);
   /*
-  Pro Way
+  Pro Way?
   screenPoint.unproject( app.camera );
   const dir = screenPoint.sub( app.camera.position ).normalize();
   const distance = - app.camera.position.z / dir.z;

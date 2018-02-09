@@ -25,7 +25,7 @@ export default (renderer, camera, sceneBackground, sceneMirror, sceneHeader) => 
   composerBackground.renderTarget2.stencilBuffer = true; //??
   /* *** */
   /* Clear */
-  composerBackground.addPass(clearPass);
+  //composerBackground.addPass(clearPass);
   /* *** */
   /* Render background scene with SSAA */
   //const sceneBackgroundSsaaRenderPass = new THREE.SSAARenderPass(sceneBackground, camera);
@@ -34,6 +34,8 @@ export default (renderer, camera, sceneBackground, sceneMirror, sceneHeader) => 
   /* *** */
   const sceneBackgroundRenderPass = new THREE.RenderPass(sceneBackground, camera);
   composerBackground.addPass(sceneBackgroundRenderPass);
+  //const fxaaPass = new THREE.ShaderPass( THREE.FXAAShader );
+  //composerBackground.addPass(fxaaPass);
   /* *** */
   /* Background effects */
   const sceneBackgroundVignettePass = new THREE.ShaderPass( THREE.VignetteShader );
@@ -42,7 +44,7 @@ export default (renderer, camera, sceneBackground, sceneMirror, sceneHeader) => 
   composerBackground.addPass(sceneBackgroundVignettePass);
   composerBackground.addPass(staticPass);
   composerBackground.addPass(filmPass);
-  composerBackground.addPass(badTVPass);
+  //composerBackground.addPass(badTVPass);
   /* *** */
   /* Triangle "flip mirror" */
   const sceneMirrorMaskPass = new THREE.MaskPass(sceneMirror, camera);
@@ -61,14 +63,15 @@ export default (renderer, camera, sceneBackground, sceneMirror, sceneHeader) => 
   /* *** */
   
   sceneHeader.background = renderTarget.texture;
+  
   const finalComposer = new THREE.EffectComposer(renderer);
+  finalComposer.addPass(clearPass);
   //const headerSsaaRenderPass = new THREE.SSAARenderPass(sceneHeader, camera);
   //finalComposer.addPass(headerSsaaRenderPass);
   const headerRenderPass = new THREE.RenderPass( sceneHeader, camera);
   finalComposer.addPass(headerRenderPass);
-  const fxaaPass = new THREE.ShaderPass( THREE.FXAAShader );
-  finalComposer.addPass(fxaaPass);
-
+  //const fxaaPass = new THREE.ShaderPass( THREE.FXAAShader );
+  //finalComposer.addPass(fxaaPass);
   finalComposer.addPass(rgbPass);
   finalComposer.addPass(distortionPass);
   finalComposer.addPass(glitchPass);

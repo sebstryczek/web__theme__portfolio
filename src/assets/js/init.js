@@ -1,4 +1,5 @@
 import { getStyle } from './UtilsCss';
+import { doOnceAfterRenderInvoke } from './UtilsRender';
 import { addStats, statsBegin, statsEnd } from './UtilsStats';
 import { onResize } from './UtilsWindow';
 
@@ -6,7 +7,8 @@ const setSize = (container, renderer) => {
   const style = getStyle(container);
   const height = parseInt( style.height, 10 );
   const width = parseInt( style.width, 10 );
-  window.appGlobals = Object.assign({}, window.appGlobals, { height, width });
+  const ratio = width / height;
+  window.appGlobals = Object.assign({}, window.appGlobals, { height, width, ratio });
   renderer.setSize( width, height );
 }
 
@@ -16,7 +18,7 @@ const clock = new THREE.Clock();
 const loops = [];
 const addLoop = loop => loops.push(loop);
 const render = () => {
-  statsBegin();
+  //statsBegin();
   loops.forEach( f => f() );
   if (currentSceneWrapper) {
     const delta = clock.getDelta();
@@ -24,7 +26,8 @@ const render = () => {
     currentSceneWrapper.animEffectsLoop( delta );
     currentSceneWrapper.render( delta );
   }
-  statsEnd();
+  doOnceAfterRenderInvoke();
+  //statsEnd();
   requestAnimationFrame(render);
 };
 

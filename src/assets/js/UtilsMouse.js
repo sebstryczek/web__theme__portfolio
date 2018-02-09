@@ -16,14 +16,14 @@ document.addEventListener('mousemove', event => {
 });
 
 document.addEventListener('mousedown', event => {
-  event.preventDefault();
+  //event.preventDefault();
   onMouseDownCallbacks.forEach( f => f(event) );
-});
+}, true);
 
 document.addEventListener('mouseup', event => {
   event.preventDefault();
   onMouseUpCallbacks.forEach( f => f(event) );
-});
+}, true);
 
 export const getMousePos = () => pos;
 
