@@ -1,4 +1,5 @@
 import { addLoop } from './UtilsLoop';
+import { normalizeToRange } from './UtilsMathExt';
 import { getMousePosNorm, getMousePosNormDelta, onMouseDown, onMouseUp, onMouseClick } from './UtilsMouse';
 import { getObjectFaceOnPoint, isScreenPointOverObject, screenToWorldPoint } from './UtilsRaycast';
 import { doOnceAfterRender } from './UtilsRender';
@@ -23,11 +24,8 @@ window.appGlobals = Object.assign({}, window.appGlobals, {isHoverUI: () => hover
 onMouseClick( e => {
   hoverButtonOnClick ? hoverButtonOnClick() : null});
 
-
-
 export const createButton = (args) => {
   const {
-    camera,
     sprite, position,
     colliderSize, colliderPosition,
     stateNormal, stateHover,
@@ -51,7 +49,7 @@ export const createButton = (args) => {
 
   let targetOpacity = stateNormal.opacity;
   addLoop( delta => {
-    
+    const camera = window.appGlobals.camera;
     const isHover = button.visible && isScreenPointOverObject(camera, getMousePosNorm(), collider);
     if (isHover) {
       hoverButtonOnClick = onClick;
@@ -61,15 +59,32 @@ export const createButton = (args) => {
     }
     sprite.material.opacity = THREE.Math.lerp(sprite.material.opacity, targetOpacity, delta * 10);
   });
-  
-  doOnceAfterRender(() => {
-    const buttonPos = screenToWorldPoint(camera, new THREE.Vector2(position.x, position.y), button);
-    if (buttonPos) {
-      button.position.x = buttonPos.x;
-      button.position.y = buttonPos.y;
-    }
-  });
   return button;
+}
+
+export const setFixedSize = (obj, fixedSize) => {
+  doOnceAfterRender(() => {
+    const camera = window.appGlobals.camera;
+    const fixedWidthNormalized = (fixedSize.x / window.appGlobals.width) * 2;
+    const fixedHeightNormalized = (fixedSize.y / window.appGlobals.height) * 2;
+    const min = screenToWorldPoint(camera, new THREE.Vector2(0), obj);
+    const max = screenToWorldPoint(camera, new THREE.Vector2(fixedWidthNormalized, fixedHeightNormalized), obj);
+    const scaleX = Math.abs(min.x) + Math.abs(max.x);
+    const scaleY = Math.abs(min.y) + Math.abs(max.y);
+    obj.scale.x = scaleX;
+    obj.scale.y = scaleY;
+  });
+}
+
+export const setFixedPosition = (obj, fixedPosition) => {
+  doOnceAfterRender(() => {
+    const camera = window.appGlobals.camera;
+    const fixedPositionXNormalized = (fixedPosition.x / window.appGlobals.width) * 2 - 1;
+    const fixedPositionYNormalized = (fixedPosition.y / window.appGlobals.height) * 2 - 1;
+    const position = screenToWorldPoint(camera, new THREE.Vector2(fixedPositionXNormalized, fixedPositionYNormalized), obj);
+    obj.position.x = position.x;
+    obj.position.y = position.y;
+  });
 }
 
 export const createSprite = url => {
@@ -93,10 +108,10 @@ export const createTextSprite = text => {
 
   ctx.clearRect(0, 0, 2048, 2048);
   ctx.fillText(text, 1024, 1024);
-  const headerPng = canvas.toDataURL("image/png");
-  const headerTexture = new THREE.TextureLoader().load(headerPng);
+  const png = canvas.toDataURL("image/png");
+  const texture = new THREE.TextureLoader().load(png);
   const sprite = new THREE.Sprite(
-    new THREE.SpriteMaterial( { map: headerTexture, color: 0xffffff, fog: false } )
+    new THREE.SpriteMaterial( { map: texture, color: 0xffffff, fog: false } )
   );
   return sprite;
 }

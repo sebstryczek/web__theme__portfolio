@@ -3,13 +3,17 @@ import { addLoop, clearLoops } from './UtilsLoop';
 import { addStats } from './UtilsStats';
 import { onResize } from './UtilsWindow';
 
+const setGlobals = args => {
+  window.appGlobals = Object.assign({}, window.appGlobals, args);
+}
+
 const setSize = (container, renderer) => {
   const style = getStyle(container);
   const height = parseInt( style.height, 10 );
   const width = parseInt( style.width, 10 );
   const ratio = width / height;
-  window.appGlobals = Object.assign({}, window.appGlobals, { height, width, ratio });
   renderer.setSize( width, height );
+  setGlobals({height, width, ratio});
 }
 
 const init = ( container, clearColor ) => {
@@ -26,10 +30,12 @@ const init = ( container, clearColor ) => {
   const initSceneLoop = async sceneCreator => {
     clearLoops();
     const sceneWrapper =  await sceneCreator(renderer);
+    const { camera, animLoop, animEffectsLoop, render} = sceneWrapper;
+    setGlobals({ camera });
     addLoop( delta => {
-      sceneWrapper.animLoop( delta );
-      sceneWrapper.animEffectsLoop( delta );
-      sceneWrapper.render( delta );
+      animLoop( delta );
+      animEffectsLoop( delta );
+      render( delta );
     });
   }
 
