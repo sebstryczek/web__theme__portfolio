@@ -15,3 +15,7 @@ export const getPointOnCircle = (originX, originY, radius, angleDeg) => {
     y: originY + radius * Math.sin(angleRad)
   }
 }
+
+export const normalizeToRange = (val, min, max) => {
+  return (val - min) / (max - min);
+}
