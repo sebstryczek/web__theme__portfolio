@@ -9,7 +9,7 @@ export default async (renderer) => {
   const camera = createCamera();
   const sceneBackground = createSceneBackground();
   const sceneMirror = createSceneMirrorMask();
-  const sceneUI = await createSceneUI(camera);
+  const sceneUI = await createSceneUI();
   const { render, animEffectsLoop } = createPostProcessingRenderer(
     renderer,
     camera,
@@ -21,6 +21,6 @@ export default async (renderer) => {
   const animLoop = createAnimLoop(camera, sceneBackground, sceneUI);
   
   return {
-    render, animLoop, animEffectsLoop
+    camera, render, animLoop, animEffectsLoop
   }
 }
