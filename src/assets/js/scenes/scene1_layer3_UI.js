@@ -26,7 +26,7 @@ export default async () => {
   });
   scene.add(buttonGitHub);
   setFixedSize(buttonGitHub, { x: 48, y: 48 });
-  setFixedPosition(buttonGitHub, { x: window.appGlobals.width / 2 - 48, y: 64 });
+  setFixedPosition(buttonGitHub, { x: window.appGlobals.width * 0.5 - 48, y: window.appGlobals.height * 0.025 + 64 });
 
   const buttonLinkedIn = createButton({
     sprite: createSprite('./assets/img/icon-linkedin-b.png'),
@@ -38,7 +38,7 @@ export default async () => {
   });
   scene.add(buttonLinkedIn);
   setFixedSize(buttonLinkedIn, { x: 48, y: 48 });
-  setFixedPosition(buttonLinkedIn, { x: window.appGlobals.width / 2 + 48, y: 64 });
+  setFixedPosition(buttonLinkedIn, { x: window.appGlobals.width * 0.5 + 48, y: window.appGlobals.height * 0.025 + 64 });
   
   const buttonCopyEmail = createButton({
     sprite: createTextSprite('sebastian@stryczek.pl'),
@@ -54,7 +54,7 @@ export default async () => {
   });
   scene.add(buttonCopyEmail);
   setFixedSize(buttonCopyEmail, { x: 160, y: 160 });
-  setFixedPosition(buttonCopyEmail, { x: window.appGlobals.width / 2, y: 12 });
+  setFixedPosition(buttonCopyEmail, { x: window.appGlobals.width * 0.5, y: window.appGlobals.height * 0.025 + 12 });
   
   const buttonCopyEmailDone = createButton({
     sprite: createTextSprite('e-mail address copied'),
@@ -70,7 +70,7 @@ export default async () => {
   buttonCopyEmailDone.visible = false;
   scene.add(buttonCopyEmailDone);
   setFixedSize(buttonCopyEmailDone, { x: 160, y: 160 });
-  setFixedPosition(buttonCopyEmailDone, { x: window.appGlobals.width / 2, y: 12 });
+  setFixedPosition(buttonCopyEmailDone, { x: window.appGlobals.width * 0.5, y: window.appGlobals.height * 0.025 + 12 });
   
   return scene;
 }
