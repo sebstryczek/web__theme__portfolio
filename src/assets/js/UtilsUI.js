@@ -1,7 +1,6 @@
 import { addLoop } from './UtilsLoop';
-import { normalizeToRange } from './UtilsMathExt';
-import { getMousePosNorm, getMousePosNormDelta, onMouseDown, onMouseUp, onMouseClick } from './UtilsMouse';
-import { getObjectFaceOnPoint, isScreenPointOverObject, screenToWorldPoint } from './UtilsRaycast';
+import { getMousePosNorm, onMouseClick } from './UtilsMouse';
+import { isScreenPointOverObject, screenToWorldPoint } from './UtilsRaycast';
 import { doOnceAfterRender } from './UtilsRender';
 
 const canvas = document.createElement('canvas');
@@ -10,19 +9,10 @@ canvas.height = 2048;
 canvas.style.display = "none";
 const ctx = canvas.getContext("2d");
 
-
-onMouseDown( e => {
-})
-
-onMouseUp( e => {
-})
-import { copyToClipboard } from './UtilsClipboard';
-
 let isHoverInitialized = false;
 let hoverButtonOnClick = null;
 window.appGlobals = Object.assign({}, window.appGlobals, {isHoverUI: () => hoverButtonOnClick != null});
-onMouseClick( e => {
-  hoverButtonOnClick ? hoverButtonOnClick() : null});
+onMouseClick( e => hoverButtonOnClick ? hoverButtonOnClick() : null );
 
 export const createButton = (args) => {
   const {
