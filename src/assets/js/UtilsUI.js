@@ -92,7 +92,7 @@ export const createSprite = url => {
 export const createTextSprite = text => {
   ctx.clearRect(0, 0, 2048, 2048);
   ctx.fillStyle="#000000";
-  ctx.font = "200px Segoe UI Semibold";
+  ctx.font = "182px Helvetica, Segoe UI Semibold";
   ctx.textAlign = "center";
   ctx.textBaseline = "baseline"; 
 
